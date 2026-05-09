@@ -1,14 +1,5 @@
 import React,{useEffect,useState}from'react';import{supabase}from'../lib/supabase.js';import{requireAuth,getUser}from'../lib/auth.js';import*as S from'../styles.js';
-export default function ApiKeys(){
-  const[keys,setKeys]=useState([]);const[name,setName]=useState('');
-  useEffect(()=>{requireAuth(window.location.href);supabase.from('ai_api_keys').select('*').order('created_at',{ascending:false}).then(({data})=>setKeys(data||[]));  },[]);
-  const create=async()=>{const u=getUser();if(!u||!name)return;const h='sk-its-'+Math.random().toString(36).slice(2,18);await supabase.from('ai_api_keys').insert({user_id:u.sub,key_hash:h,name,is_active:true});setName('');supabase.from('ai_api_keys').select('*').order('created_at',{ascending:false}).then(({data})=>setKeys(data||[]));};
-  return React.createElement('div',{style:S.page},React.createElement('h1',{style:S.h1},'API Keys'),
-    React.createElement('div',{style:{...S.card,display:'flex',gap:'0.75rem',marginBottom:'1.5rem'}},
-      React.createElement('input',{style:S.input,placeholder:'Key name',value:name,onChange:e=>setName(e.target.value)}),
-      React.createElement('button',{style:S.btn,onClick:create},'Generate')
-    ),
-    keys.length===0&&React.createElement('p',{style:S.muted},'No API keys yet.'),
-    keys.map(k=>React.createElement('div',{key:k.id,style:S.card},React.createElement('div',{style:{display:'flex',justifyContent:'space-between'}},React.createElement('h2',{style:S.h2},k.name),React.createElement('span',{style:S.badge(k.is_active?'#22c55e':'#64748b')},k.is_active?'Active':'Inactive')),React.createElement('p',{style:{...S.muted,fontFamily:'monospace',marginTop:'0.3rem'}},k.key_hash)))
-  );
-}
+export default function ApiKeys(){const[keys,setKeys]=useState([]);const[n,setN]=useState('');
+useEffect(()=>{requireAuth(window.location.href);supabase.from('ai_api_keys').select('*').order('created_at',{ascending:false}).then(({data})=>setKeys(data||[]));  },[]);
+const gen=async()=>{const u=getUser();if(!u||!n)return;const h='sk-its-'+Math.random().toString(36).slice(2,18);await supabase.from('ai_api_keys').insert({user_id:u.sub,key_hash:h,name:n,is_active:true});setN('');supabase.from('ai_api_keys').select('*').order('created_at',{ascending:false}).then(({data})=>setKeys(data||[]));};
+return React.createElement('div',{style:S.page},React.createElement('h1',{style:S.h1},'API Keys'),React.createElement('div',{style:{...S.card,display:'flex',gap:'0.75rem'}},React.createElement('input',{style:S.input,placeholder:'Key name',value:n,onChange:e=>setN(e.target.value)}),React.createElement('button',{style:S.btn,onClick:gen},'Generate')),keys.length===0&&React.createElement('p',{style:S.muted},'No keys yet.'),keys.map(k=>React.createElement('div',{key:k.id,style:S.card},React.createElement('div',{style:{display:'flex',justifyContent:'space-between'}},React.createElement('h2',{style:S.h2},k.name),React.createElement('span',{style:S.badge(k.is_active?'#22c55e':'#64748b')},k.is_active?'Active':'Inactive')),React.createElement('p',{style:{...S.muted,fontFamily:'monospace',marginTop:'0.3rem'}},k.key_hash))));}
