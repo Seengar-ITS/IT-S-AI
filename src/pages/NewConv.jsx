@@ -1,0 +1,1 @@
+import React from 'react';import*as S from'../styles.js';export default function NewConv(){React.useEffect(()=>window.location.href='/',[]);return React.createElement('div',{style:S.page},React.createElement('p',{style:S.muted},'Redirecting...'));}
